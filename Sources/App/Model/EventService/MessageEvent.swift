@@ -5,17 +5,28 @@ enum MessageEventType: String, Codable {
     case messageDeleted = "message_deleted"
 }
 
-protocol MessageEvent: Event {
-    static var messageEventType: MessageEventType? { get }
-    func toAnyMessageEvent() -> AnyMessageEvent
+public enum MessageEvent {
+    case `default`(Message)
+    case edit(MessageEdit)
 }
 
-extension MessageEvent {
-    static var eventType: EventType {
-        return .message
+extension MessageEvent: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case subtype
     }
     
-    func toAnyEvent() -> AnyEvent {
-        return .messageEvent(toAnyMessageEvent())
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let type = try container.decodeIfPresent(MessageEventType.self, forKey: .subtype)
+        
+        switch type {
+        case nil:
+            let message = try Message(from: decoder)
+            self = .default(message)
+            
+        // TODO
+        case .meMessage?, .messageChanged?, .messageDeleted?:
+            self = .edit(MessageEdit())
+        }
     }
 }

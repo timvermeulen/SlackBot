@@ -15,8 +15,8 @@ extension Reaction: Encodable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
-        try container.encode(emoji.name, forKey: .name)
-        try container.encode(target.source, forKey: .channel)
+        try container.encode(emoji.name,       forKey: .name)
+        try container.encode(target.source,    forKey: .channel)
         try container.encode(target.timestamp, forKey: .timestamp)
     }
 }

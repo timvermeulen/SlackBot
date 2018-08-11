@@ -46,23 +46,42 @@ public extension SlackBot {
         }
     }
     
-    func addSlashCommand(at path: PathComponentsRepresentable..., makeResponse: @escaping (Request, Client) throws -> Future<SlashCommandResponse>) {
-        slashCommandService.addSlashCommand(at: path) { request in try makeResponse(request, self.client) }
+    func addSlashCommand(
+        at path: PathComponentsRepresentable...,
+        makeResponse: @escaping (Request, Client) throws -> Future<SlashCommandResponse>
+    ) {
+        slashCommandService.addSlashCommand(at: path) { [client] request in
+            try makeResponse(request, client)
+        }
     }
     
-    func respond(to message: Message, with contents: MessageContents, attachments: [Attachment] = [], style: ResponseStyle = .inline) throws {
-        let style = message.isThreaded ? .threaded : style
-        let responseMessage = ResponseMessage(style: style, contents: contents, attachments: attachments, target: message.target)
-        try webService.send(responseMessage)
+    func respond(
+        to message: Message,
+        with contents: MessageContents,
+        attachments: [Attachment] = [],
+        style: ResponseStyle = .inline
+    ) throws {
+        try webService.send(ResponseMessage(
+            style: message.isThreaded ? .threaded : style,
+            contents: contents,
+            attachments: attachments,
+            target: message.target
+        ))
     }
     
-    func respondEphemerally(to message: Message, with contents: MessageContents, attachments: [Attachment] = []) throws {
-        let responseMessage = EphemeralMessage(contents: contents, attachments: attachments, target: message.target)
-        try webService.send(responseMessage)
+    func respondEphemerally(
+        to message: Message,
+        with contents: MessageContents,
+        attachments: [Attachment] = []
+    ) throws {
+        try webService.send(EphemeralMessage(
+            contents: contents,
+            attachments: attachments,
+            target: message.target
+        ))
     }
     
     func react(to message: Message, with emoji: EmojiRepresentable) throws {
-        let reaction = Reaction(target: message.target, emoji: emoji)
-        try webService.send(reaction)
+        try webService.send(Reaction(target: message.target, emoji: emoji))
     }
 }

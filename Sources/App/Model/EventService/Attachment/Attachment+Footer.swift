@@ -1,18 +1,22 @@
 extension Attachment {
     public struct Footer: Codable {
         let contents: MessageContents
-        let icon: String?
+        let iconURL: String?
         let timestamp: UnixTimestamp?
         
-        public init(contents: MessageContents, icon: String? = nil, timestamp: UnixTimestamp? = nil) {
+        public init(
+            contents: MessageContents,
+            iconURL: String? = nil,
+            timestamp: UnixTimestamp? = nil
+        ) {
             self.contents = contents
-            self.icon = icon
+            self.iconURL = iconURL
             self.timestamp = timestamp
         }
         
         enum CodingKeys: String, CodingKey {
             case contents = "footer"
-            case icon = "footer_icon"
+            case iconURL = "footer_icon"
             case timestamp = "ts"
         }
     }

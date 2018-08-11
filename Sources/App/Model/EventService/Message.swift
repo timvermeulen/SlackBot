@@ -5,6 +5,7 @@ public struct Message {
     public let user: ID<User>
     public let source: Source
     public let threadTimestamp: Timestamp?
+    public let attachments: [Attachment]?
     
     public let contents: MessageContents
 }
@@ -22,6 +23,7 @@ extension Message: Decodable {
         case threadTimestamp = "thread_ts"
         case user
         case channel
+        case attachments
     }
     
     public init(from decoder: Decoder) throws {
@@ -32,17 +34,8 @@ extension Message: Decodable {
         user = try container.decode(ID.self, forKey: .user)
         source = try container.decode(Source.self, forKey: .channel)
         threadTimestamp = try container.decodeIfPresent(Timestamp.self, forKey: .threadTimestamp)
+        attachments = try container.decodeIfPresent([Attachment].self, forKey: .attachments)
         
         contents = try container.decode(MessageContents.self, forKey: .text)
-    }
-}
-
-extension Message: MessageEvent {
-    static var messageEventType: MessageEventType? {
-        return nil
-    }
-    
-    func toAnyMessageEvent() -> AnyMessageEvent {
-        return .default(self)
     }
 }

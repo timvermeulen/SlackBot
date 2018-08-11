@@ -21,6 +21,7 @@ extension WebService {
         
         _ = client.post(url, headers: headers) { request in
             try request.content.encode(json: object)
+            print(request.content)
         }
     }
 }

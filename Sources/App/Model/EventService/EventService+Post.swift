@@ -13,7 +13,7 @@ extension EventService.Post {
     
     enum Content {
         case challenge(String)
-        case event(AnyEvent)
+        case event(Event)
     }
 }
 
@@ -37,7 +37,7 @@ extension EventService.Post: Decodable {
             content = .challenge(challenge)
             
         case .event:
-            let event = try container.decode(AnyEvent.self, forKey: .event)
+            let event = try container.decode(Event.self, forKey: .event)
             content = .event(event)
         }
     }

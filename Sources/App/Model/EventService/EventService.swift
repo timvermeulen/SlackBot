@@ -11,16 +11,10 @@ final class EventService {
         self.handlers = []
     }
     
-    private func verifyToken(_ token: String) throws {
-        if token != verificationToken { throw Abort(.forbidden) }
-    }
-    
     func start() throws {
-        router.post("event") { request -> Future<AnyResponse> in
-            let post = try request.content.decode(Post.self)
-            
-            return post.map(to: AnyResponse.self) { post in
-                try self.verifyToken(post.token)
+        router.post("event") { [verificationToken] request -> Future<AnyResponse> in
+            return try request.content.decode(Post.self).map { post in
+                guard post.token == verificationToken else { throw Abort(.forbidden) }
                 
                 switch post.content {
                 case .challenge(let challenge):
@@ -34,7 +28,6 @@ final class EventService {
                     return AnyResponse(HTTPStatus.ok)
                 }
             }
-            
         }
         
         router.get("hello") { _ in

@@ -11,9 +11,20 @@ public struct Attachment {
     let author: Author?
     let footer: Footer?
     
-    let fields: [Field]
+    let fields: [Field]?
     
-    public init(contents: MessageContents? = nil, pretext: MessageContents? = nil, fallback: String? = nil, color: Color? = nil, imageURL: String? = nil, thumbnailURL: String? = nil, fields: [Field] = [], title: Title? = nil, author: Author? = nil, footer: Footer? = nil) {
+    public init(
+        contents: MessageContents? = nil,
+        pretext: MessageContents? = nil,
+        fallback: String? = nil,
+        color: Color? = nil,
+        imageURL: String? = nil,
+        thumbnailURL: String? = nil,
+        fields: [Field]? = nil,
+        title: Title? = nil,
+        author: Author? = nil,
+        footer: Footer? = nil
+    ) {
         self.contents = contents
         self.pretext = pretext
         self.fallback = fallback
@@ -44,18 +55,37 @@ extension Attachment: Encodable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
-        try container.encodeIfPresent(contents, forKey: .text)
-        try container.encodeIfPresent(pretext, forKey: .pretext)
-        try container.encodeIfPresent(fallback, forKey: .fallback)
-        try container.encodeIfPresent(color, forKey: .color)
+        try container.encodeIfPresent(contents,     forKey: .text)
+        try container.encodeIfPresent(pretext,      forKey: .pretext)
+        try container.encodeIfPresent(fallback,     forKey: .fallback)
+        try container.encodeIfPresent(color,        forKey: .color)
         
-        try container.encodeIfPresent(imageURL, forKey: .imageURL)
+        try container.encodeIfPresent(imageURL,     forKey: .imageURL)
         try container.encodeIfPresent(thumbnailURL, forKey: .thumbnailURL)
         
-        try container.encode(fields, forKey: .fields)
+        try container.encodeIfPresent(fields,       forKey: .fields)
         
         try title?.encode(to: encoder)
         try author?.encode(to: encoder)
         try footer?.encode(to: encoder)
+    }
+}
+
+extension Attachment: Decodable {
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        self.init(
+            contents:     try container.decodeIfPresent(MessageContents.self, forKey: .text),
+            pretext:      try container.decodeIfPresent(MessageContents.self, forKey: .pretext),
+            fallback:     try container.decodeIfPresent(String.self,          forKey: .fallback),
+            color:        try container.decodeIfPresent(Color.self,           forKey: .color),
+            imageURL:     try container.decodeIfPresent(String.self,          forKey: .imageURL),
+            thumbnailURL: try container.decodeIfPresent(String.self,          forKey: .thumbnailURL),
+            fields:       try container.decodeIfPresent([Field].self,         forKey: .fields),
+            title:        try Title(from: decoder),
+            author:       try Author(from: decoder),
+            footer:       try Footer(from: decoder)
+        )
     }
 }

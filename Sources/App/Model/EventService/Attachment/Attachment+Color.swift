@@ -22,7 +22,12 @@ extension Attachment.Color: Encodable {
     }
     
     public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(rawValue)
+        try rawValue.encode(to: encoder)
+    }
+}
+
+extension Attachment.Color: Decodable {
+    public init(from decoder: Decoder) throws {
+        self = .good // TODO
     }
 }

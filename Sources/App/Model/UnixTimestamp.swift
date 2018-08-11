@@ -8,8 +8,12 @@ public struct UnixTimestamp: Newtype, Codable, Equatable, Comparable, CustomStri
     }
 }
 
-extension UnixTimestamp {
-    public static var current: UnixTimestamp {
-        return UnixTimestamp(rawValue: Int(Date().timeIntervalSince1970))
+public extension UnixTimestamp {
+    init(date: Date) {
+        self.init(rawValue: Int(date.timeIntervalSince1970))
+    }
+    
+    static var current: UnixTimestamp {
+        return UnixTimestamp(date: Date())
     }
 }

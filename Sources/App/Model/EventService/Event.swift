@@ -4,17 +4,12 @@ enum EventType: String, Codable {
     case reactionAdded = "reaction_added"
 }
 
-protocol Event: Decodable {
-    static var eventType: EventType { get }
-    func toAnyEvent() -> AnyEvent
-}
-
-public enum AnyEvent {
-    case messageEvent(AnyMessageEvent)
+public enum Event {
+    case messageEvent(MessageEvent)
     case reactionAdded
 }
 
-extension AnyEvent: Decodable {
+extension Event: Decodable {
     enum CodingKeys: String, CodingKey {
         case eventType = "type"
     }
@@ -25,7 +20,7 @@ extension AnyEvent: Decodable {
         
         switch type {
         case .message:
-            let messageEvent = try AnyMessageEvent(from: decoder)
+            let messageEvent = try MessageEvent(from: decoder)
             self = .messageEvent(messageEvent)
             
         case .reactionAdded:

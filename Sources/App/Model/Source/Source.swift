@@ -11,8 +11,7 @@ extension Source: Codable {
     }
     
     public init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        let id = try container.decode(String.self)
+        let id = try String(from: decoder)
         
         guard let character = id.first else { throw Error.emptyID }
         
@@ -29,19 +28,18 @@ extension Source: Codable {
     }
     
     public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        
         switch self {
         case .channel(let id):
-            try container.encode(id)
+            try id.encode(to: encoder)
         case .im(let id):
-            try container.encode(id)
+            try id.encode(to: encoder)
         case .group(let id):
-            try container.encode(id)
+            try id.encode(to: encoder)
         }
     }
 }
 
+// TODO: consider if these are really needed
 extension Source {
     public var channel: ID<Channel>? {
         guard case .channel(let id) = self else { return nil }
@@ -75,11 +73,11 @@ extension Source: CustomStringConvertible {
     public var description: String {
         switch self {
         case .channel(let id):
-            return String(describing: id)
+            return "\(id)"
         case .im(let id):
-            return String(describing: id)
+            return "\(id)"
         case .group(let id):
-            return String(describing: id)
+            return "\(id)"
         }
     }
 }

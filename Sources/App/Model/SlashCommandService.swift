@@ -1,16 +1,5 @@
 import Vapor
 
-struct Model {
-    let price: Double
-}
-
-extension Model: Decodable {
-    init(from decoder: Decoder) throws {
-        let dictionary = try [String: Double](from: decoder)
-        price = dictionary["USD"]!
-    }
-}
-
 final class SlashCommandService {
     private let router: Router
     private let client: Client
@@ -21,44 +10,22 @@ final class SlashCommandService {
     }
 }
 
-// taken from Router+Method.swift
-private extension Router {
-    func post<T: ResponseEncodable>(_ path: [PathComponentsRepresentable], use closure: @escaping (Request) throws -> T) {
-        let responder = BasicResponder { try closure($0).encode(for: $0) }
-        let route = Route<Responder>(path: [.constant(HTTPMethod.POST.string)] + path.convertToPathComponents(), output: responder)
-        register(route: route)
-    }
-}
-
 extension SlashCommandService {
-    func addSlashCommand(at path: [PathComponentsRepresentable], makeResponse: @escaping (Request) throws -> Future<SlashCommandResponse>) {
-        router.post(path) { request -> Future<HTTPStatus> in
+    func addSlashCommand(
+        at path: PathComponentsRepresentable...,
+        makeResponse: @escaping (Request) throws -> Future<SlashCommandResponse>
+    ) {
+        router.post(path) { request -> Future<SlashCommandResponse> in
             let data = try request.content.decode(SlashCommandData.self)
-
+            
             return data.map { data in
-                let symbol = data.text
-
-                let model = self.client
-                    .get("https://min-api.cryptocompare.com/data/price?fsym=\(symbol)&tsyms=USD")
-                    .flatMap(to: Model.self) { try $0.content.decode(Model.self) }
-
-                model.do { model in
-                    let response = SlashCommandResponse(contents: ["1 \(symbol) = \(model.price) USD"])
-                    
-                    _ = self.client.post(data.responseURL) { request in
-                        try request.content.encode(response)
-                    }
-                }.catch { error in
-                    print(error)
-                }
-
-                return .ok
+                SlashCommandResponse(contents: ["hullo ", data.text], type: .ephemeral)
             }
         }
     }
 }
 
-public struct SlashCommandData: Codable {
+public struct SlashCommandData: Decodable {
     let responseURL: String
     let text: String
     

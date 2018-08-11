@@ -5,9 +5,9 @@ public protocol Newtype {
     init(rawValue: RawValue)
 }
 
-extension Newtype where Self: CustomStringConvertible {
+extension Newtype where Self: CustomStringConvertible, RawValue: CustomStringConvertible {
     public var description: String {
-        return String(describing: rawValue)
+        return rawValue.description
     }
 }
 
@@ -30,8 +30,8 @@ extension Newtype where Self: Equatable, RawValue: Equatable {
 }
 
 extension Newtype where Self: Hashable, RawValue: Hashable {
-    public var hashValue: Int {
-        return rawValue.hashValue
+    func hash(into hasher: inout Hasher) {
+        rawValue.hash(into: &hasher)
     }
 }
 

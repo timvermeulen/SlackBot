@@ -23,9 +23,9 @@ extension ResponseMessage: Encodable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
-        try container.encode(contents, forKey: .text)
+        try container.encode(contents,      forKey: .text)
         try container.encode(target.source, forKey: .channel)
-        try container.encode(attachments, forKey: .attachments)
+        try container.encode(attachments,   forKey: .attachments)
         
         if case .threaded = style {
             try container.encode(target.timestamp, forKey: .threadTimestamp)

@@ -38,13 +38,11 @@ extension Timestamp: Comparable {
 
 extension Timestamp: Codable {
     public init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        try self.init(container.decode(String.self))
+        try self.init(String(from: decoder))
     }
     
     public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode("\(unix).\(identifier)")
+        try "\(self)".encode(to: encoder)
     }
 }
 
