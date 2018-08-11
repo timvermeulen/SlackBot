@@ -1,9 +1,9 @@
 extension Attachment {
     public struct Title: Codable {
         let contents: MessageContents
-        let link: String?
+        let link: URL?
         
-        public init(contents: MessageContents, link: String? = nil) {
+        public init(contents: MessageContents, link: URL? = nil) {
             self.contents = contents
             self.link = link
         }

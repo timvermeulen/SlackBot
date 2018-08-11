@@ -1,39 +1,19 @@
 import Vapor
 
-public struct OAuth {
-    let clientID: String
-    let clientSecret: String
-    let scopes: [String]
-    
-    public init(clientID: String, clientSecret: String, scopes: [String]) {
-        self.clientID = clientID
-        self.clientSecret = clientSecret
-        self.scopes = scopes
-    }
-    
-    var headers: HTTPHeaders {
-        return ["Authorization": "Basic \(Data("\(clientID):\(clientSecret)".utf8).base64EncodedString())"]
-    }
-    
-    var scope: String {
-        return scopes.joined(separator: " ")
-    }
-}
-
 public final class SlackBot {
     private let app: Application
     private let router: Router
     private let oauth: OAuth
-    private let url: String
+    private let url: URL
     
     private let eventService: EventService
     private let webService: WebService
     private let slashCommandService: SlashCommandService
     
     // TODO: add persistence for this
-    private var installations: [String: Installation] = [:]
+    private var installations: [TeamID: Installation] = [:]
     
-    public init(oauth: OAuth, signingSecret: String, url: String) throws {
+    public init(oauth: OAuth, signingSecret: SigningSecret, url: URL) throws {
         let router = EngineRouter.default()
         
         var middlewares = MiddlewareConfig()

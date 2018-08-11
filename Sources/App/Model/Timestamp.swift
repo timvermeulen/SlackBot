@@ -1,10 +1,26 @@
 public struct Timestamp {
     public let unix: UnixTimestamp
-    public let identifier: String
-    private let identifierValue: Int // used for comparison
+    public let identifier: Identifier
+    private let comparableIdentifier: ComparableIdentifier // used for comparison
 }
 
 extension Timestamp {
+    public struct Identifier: Newtype, CustomStringConvertible {
+        public let rawValue: String
+        
+        public init(rawValue: String) {
+            self.rawValue = rawValue
+        }
+    }
+    
+    public struct ComparableIdentifier: Newtype, Comparable {
+        public let rawValue: Int
+        
+        public init(rawValue: Int) {
+            self.rawValue = rawValue
+        }
+    }
+    
     enum Error: Swift.Error {
         case invalidTimestamp(String)
     }
@@ -14,24 +30,24 @@ extension Timestamp {
         
         guard components.count == 2,
               let timestamp = Int(components[0]),
-              let identifierValue = Int(components[1])
+              let comparableIdentifier = Int(components[1])
         else { throw Error.invalidTimestamp(value) }
         
         self.init(
             unix: UnixTimestamp(rawValue: timestamp),
-            identifier: String(components[1]),
-            identifierValue: identifierValue
+            identifier: .init(rawValue: String(components[1])),
+            comparableIdentifier: .init(rawValue: comparableIdentifier)
         )
     }
 }
 
 extension Timestamp: Comparable {
-    public static func == (left: Timestamp, right: Timestamp) -> Bool {
-        return left.unix == right.unix
+    public static func == (lhs: Timestamp, rhs: Timestamp) -> Bool {
+        return lhs.unix == rhs.unix
     }
     
-    public static func < (left: Timestamp, right: Timestamp) -> Bool {
-        return (left.unix, left.identifierValue) < (right.unix, right.identifierValue)
+    public static func < (lhs: Timestamp, rhs: Timestamp) -> Bool {
+        return (lhs.unix, lhs.comparableIdentifier) < (rhs.unix, rhs.comparableIdentifier)
     }
 }
 

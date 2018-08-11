@@ -11,12 +11,12 @@ do {
     
     let bot = try SlackBot(
         oauth: .init(
-            clientID: clientID,
-            clientSecret: clientSecret,
-            scopes: ["channels:history", "chat:write"]
+            clientID: .init(rawValue: clientID),
+            clientSecret: .init(rawValue: clientSecret),
+            scopes: [.channelsHistory, .chatWrite]
         ),
-        signingSecret: signingSecret,
-        url: url
+        signingSecret: .init(rawValue: signingSecret),
+        url: .init(rawValue: url)
     )
     
     bot.handleMessage { bot, message in

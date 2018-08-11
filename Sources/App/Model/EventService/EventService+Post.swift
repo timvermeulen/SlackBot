@@ -1,7 +1,7 @@
 extension EventService {
     enum Post {
         case challenge(String)
-        case event(Event, teams: [String])
+        case event(Event, teams: [TeamID])
     }
 }
 
@@ -29,7 +29,7 @@ extension EventService.Post: Decodable {
             
         case .event:
             let event = try container.decode(Event.self, forKey: .event)
-            let teams = try container.decode([String].self, forKey: .teams)
+            let teams = try container.decode([TeamID].self, forKey: .teams)
             self = .event(event, teams: teams)
         }
     }

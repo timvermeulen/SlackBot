@@ -2,8 +2,8 @@ import Vapor
 
 struct Installation: Decodable {
     let appID: ID<User>
-    let teamID: String
-    let accessToken: String
+    let teamID: TeamID
+    let accessToken: OAuth.AccessToken
     
     enum CodingKeys: String, CodingKey {
         case appID = "app_user_id"

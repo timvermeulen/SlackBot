@@ -24,7 +24,7 @@ extension SlashCommandService {
 }
 
 public struct SlashCommandData: Decodable {
-    let responseURL: String
+    let responseURL: URL
     let text: String
     
     enum CodingKeys: String, CodingKey {

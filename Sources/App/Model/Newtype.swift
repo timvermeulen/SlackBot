@@ -24,8 +24,8 @@ extension Newtype where Self: Decodable, RawValue: Decodable {
 }
 
 extension Newtype where Self: Equatable, RawValue: Equatable {
-    public static func == (left: Self, right: Self) -> Bool {
-        return left.rawValue == right.rawValue
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs.rawValue == rhs.rawValue
     }
 }
 
@@ -36,8 +36,8 @@ extension Newtype where Self: Hashable, RawValue: Hashable {
 }
 
 extension Newtype where Self: Comparable, RawValue: Comparable {
-    public static func < (left: Self, right: Self) -> Bool {
-        return left.rawValue < right.rawValue
+    public static func < (lhs: Self, rhs: Self) -> Bool {
+        return lhs.rawValue < rhs.rawValue
     }
 }
 

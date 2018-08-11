@@ -1,12 +1,12 @@
 extension Attachment {
     public struct Footer: Codable {
         let contents: MessageContents
-        let iconURL: String?
+        let iconURL: URL?
         let timestamp: UnixTimestamp?
         
         public init(
             contents: MessageContents,
-            iconURL: String? = nil,
+            iconURL: URL? = nil,
             timestamp: UnixTimestamp? = nil
         ) {
             self.contents = contents

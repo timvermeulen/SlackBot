@@ -4,8 +4,8 @@ public struct Attachment {
     let fallback: String?
     let color: Color?
     
-    let imageURL: String?
-    let thumbnailURL: String?
+    let imageURL: URL?
+    let thumbnailURL: URL?
     
     let title: Title?
     let author: Author?
@@ -18,8 +18,8 @@ public struct Attachment {
         pretext: MessageContents? = nil,
         fallback: String? = nil,
         color: Color? = nil,
-        imageURL: String? = nil,
-        thumbnailURL: String? = nil,
+        imageURL: URL? = nil,
+        thumbnailURL: URL? = nil,
         fields: [Field]? = nil,
         title: Title? = nil,
         author: Author? = nil,
@@ -80,8 +80,8 @@ extension Attachment: Decodable {
             pretext:      try container.decodeIfPresent(MessageContents.self, forKey: .pretext),
             fallback:     try container.decodeIfPresent(String.self,          forKey: .fallback),
             color:        try container.decodeIfPresent(Color.self,           forKey: .color),
-            imageURL:     try container.decodeIfPresent(String.self,          forKey: .imageURL),
-            thumbnailURL: try container.decodeIfPresent(String.self,          forKey: .thumbnailURL),
+            imageURL:     try container.decodeIfPresent(URL.self,             forKey: .imageURL),
+            thumbnailURL: try container.decodeIfPresent(URL.self,             forKey: .thumbnailURL),
             fields:       try container.decodeIfPresent([Field].self,         forKey: .fields),
             title:        try Title(from: decoder),
             author:       try Author(from: decoder),

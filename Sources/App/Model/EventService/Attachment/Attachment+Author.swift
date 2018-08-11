@@ -1,19 +1,19 @@
 extension Attachment {
     public struct Author: Codable {
         let name: MessageContents
-        let link: String?
-        let icon: String?
+        let link: URL?
+        let iconURL: URL?
         
-        public init(name: MessageContents, link: String? = nil, icon: String? = nil) {
+        public init(name: MessageContents, link: URL? = nil, iconURL: URL? = nil) {
             self.name = name
             self.link = link
-            self.icon = icon
+            self.iconURL = iconURL
         }
         
         enum CodingKeys: String, CodingKey {
             case name = "author_name"
             case link = "author_link"
-            case icon = "author_icon"
+            case iconURL = "author_icon"
         }
     }
 }

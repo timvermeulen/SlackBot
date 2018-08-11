@@ -29,13 +29,12 @@ extension Message: Decodable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        text = try container.decode(String.self, forKey: .text)
-        timestamp = try container.decode(Timestamp.self, forKey: .timestamp)
-        user = try container.decode(ID.self, forKey: .user)
-        source = try container.decode(Source.self, forKey: .channel)
-        threadTimestamp = try container.decodeIfPresent(Timestamp.self, forKey: .threadTimestamp)
-        attachments = try container.decodeIfPresent([Attachment].self, forKey: .attachments)
-        
-        contents = try container.decode(MessageContents.self, forKey: .text)
+        text            = try container.decode(String.self,                forKey: .text)
+        timestamp       = try container.decode(Timestamp.self,             forKey: .timestamp)
+        user            = try container.decode(ID.self,                    forKey: .user)
+        source          = try container.decode(Source.self,                forKey: .channel)
+        threadTimestamp = try container.decodeIfPresent(Timestamp.self,    forKey: .threadTimestamp)
+        attachments     = try container.decodeIfPresent([Attachment].self, forKey: .attachments)
+        contents        = try container.decode(MessageContents.self,       forKey: .text)
     }
 }
