@@ -5,17 +5,17 @@ import Foundation
 
 do {
     let accessToken = Environment.get("access_token")!
-    let verificationToken = Environment.get("verification_token")!
+    let signingSecret = Environment.get("signing_secret")!
     let botID = Environment.get("bot_id")!
     
     let bot = try SlackBot(
         accessToken: accessToken,
-        verificationToken: verificationToken,
+        signingSecret: signingSecret,
         id: botID
     )
     
     bot.handleMessage { message in
-//        try bot.respondEphemerally(to: message, with: ["you just said \"", message.text, "\""])
+        try bot.respondEphemerally(to: message, with: ["you just said \"", message.text, "\""])
 //        try bot.respond(to: message, with: ["wazzup ", message.user], attachments: [
 //            .init(
 //                contents: "Body 1",
@@ -37,29 +37,6 @@ do {
 //                author: .init(name: ["it's you, ", message.user], link: "https://api.slack.com/")
 //            )
 //        ], style: .threaded)
-        try bot.respond(
-            to: message,
-            with: "hi",
-            attachments: [
-                .init(
-                    title: .init(contents: ["<sup> ", message.user]),
-                    author: .init(name: ["<hello> ", message.user])
-                )
-            ],
-            style: .threaded
-        )
-        
-        try bot.respond(
-            to: message,
-            with: "hi",
-            attachments: [
-                .init(
-                    title: .init(contents: ["<sup> ", message.user]),
-                    author: .init(name: ["<hello> ", message.user])
-                )
-            ],
-            style: .inline
-        )
     }
     
     try bot.start()

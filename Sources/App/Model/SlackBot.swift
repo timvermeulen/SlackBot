@@ -9,7 +9,7 @@ public final class SlackBot {
     private let webService: WebService
     private let slashCommandService: SlashCommandService
     
-    public init(accessToken: String, verificationToken: String, id: String) throws {
+    public init(accessToken: String, signingSecret: String, id: String) throws {
         let router = EngineRouter.default()
         
         var middlewares = MiddlewareConfig()
@@ -27,7 +27,7 @@ public final class SlackBot {
         me = ID(rawValue: id)
         client = try app.make(Client.self)
         
-        eventService = EventService(verificationToken: verificationToken, router: router)
+        eventService = EventService(signingSecret: signingSecret, router: router)
         webService = WebService(accessToken: accessToken, client: client)
         slashCommandService = SlashCommandService(router: router, client: client)
     }
