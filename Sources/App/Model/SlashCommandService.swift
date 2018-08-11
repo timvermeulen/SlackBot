@@ -2,11 +2,9 @@ import Vapor
 
 final class SlashCommandService {
     private let router: Router
-    private let client: Client
     
-    init(router: Router, client: Client) {
+    init(router: Router) {
         self.router = router
-        self.client = client
     }
 }
 

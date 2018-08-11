@@ -11,12 +11,12 @@ public enum Event {
 
 extension Event: Decodable {
     enum CodingKeys: String, CodingKey {
-        case eventType = "type"
+        case type
     }
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let type = try container.decode(EventType.self, forKey: .eventType)
+        let type = try container.decode(EventType.self, forKey: .type)
         
         switch type {
         case .message:

@@ -12,11 +12,10 @@ extension Timestamp {
     init(_ value: String) throws {
         let components = value.split(separator: ".", maxSplits: 1)
         
-        guard
-            components.count == 2,
-            let timestamp = Int(components[0]),
-            let identifierValue = Int(components[1])
-            else { throw Error.invalidTimestamp(value) }
+        guard components.count == 2,
+              let timestamp = Int(components[0]),
+              let identifierValue = Int(components[1])
+        else { throw Error.invalidTimestamp(value) }
         
         self.init(
             unix: UnixTimestamp(rawValue: timestamp),

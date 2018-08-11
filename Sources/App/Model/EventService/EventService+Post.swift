@@ -1,15 +1,16 @@
 extension EventService {
     enum Post {
         case challenge(String)
-        case event(Event)
+        case event(Event, teams: [String])
     }
 }
 
 extension EventService.Post: Decodable {
-    enum CodingKeys: CodingKey {
+    enum CodingKeys: String, CodingKey {
         case type
         case challenge
         case event
+        case teams = "authed_teams"
     }
     
     enum PostType: String, Decodable {
@@ -28,7 +29,8 @@ extension EventService.Post: Decodable {
             
         case .event:
             let event = try container.decode(Event.self, forKey: .event)
-            self = .event(event)
+            let teams = try container.decode([String].self, forKey: .teams)
+            self = .event(event, teams: teams)
         }
     }
 }

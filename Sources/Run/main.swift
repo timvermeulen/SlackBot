@@ -4,17 +4,22 @@ import Vapor
 import Foundation
 
 do {
-    let accessToken = Environment.get("access_token")!
+    let url =           Environment.get("url")!
+    let clientID =      Environment.get("client_id")!
+    let clientSecret =  Environment.get("client_secret")!
     let signingSecret = Environment.get("signing_secret")!
-    let botID = Environment.get("bot_id")!
     
     let bot = try SlackBot(
-        accessToken: accessToken,
+        oauth: .init(
+            clientID: clientID,
+            clientSecret: clientSecret,
+            scopes: ["channels:history", "chat:write"]
+        ),
         signingSecret: signingSecret,
-        id: botID
+        url: url
     )
     
-    bot.handleMessage { message in
+    bot.handleMessage { bot, message in
         try bot.respondEphemerally(to: message, with: ["you just said \"", message.text, "\""])
 //        try bot.respond(to: message, with: ["wazzup ", message.user], attachments: [
 //            .init(

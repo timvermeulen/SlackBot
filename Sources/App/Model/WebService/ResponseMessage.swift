@@ -3,7 +3,7 @@ import Vapor
 struct ResponseMessage {
     let style: ResponseStyle
     let contents: MessageContents
-    let attachments: [Attachment]
+    let attachments: [Attachment]?
     let target: Target
 }
 
@@ -25,7 +25,7 @@ extension ResponseMessage: Encodable {
         
         try container.encode(contents,      forKey: .text)
         try container.encode(target.source, forKey: .channel)
-        try container.encode(attachments,   forKey: .attachments)
+        try container.encodeIfPresent(attachments, forKey: .attachments)
         
         if case .threaded = style {
             try container.encode(target.timestamp, forKey: .threadTimestamp)
