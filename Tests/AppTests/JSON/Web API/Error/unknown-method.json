@@ -1,0 +1,5 @@
+{
+    "ok": false,
+    "error": "unknown_method",
+    "req_method": "invalid.method"
+}

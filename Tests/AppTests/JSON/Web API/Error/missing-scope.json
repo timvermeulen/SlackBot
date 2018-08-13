@@ -1,0 +1,5 @@
+{
+    "ok": false,
+    "error": "missing_scope",
+    "needed": "reactions:read"
+}

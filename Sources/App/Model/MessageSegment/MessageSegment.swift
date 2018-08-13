@@ -26,7 +26,11 @@ extension MessageSegment {
             return "<#\(channel.rawValue)>"
             
         case let .unknown(left, right):
-            return "<\(left)\(right.map { "|\($0)" } ?? "")>"
+            if let right = right {
+                return "<\(left)|\(right)>"
+            } else {
+                return "<\(left)>"
+            }
         }
     }
 }

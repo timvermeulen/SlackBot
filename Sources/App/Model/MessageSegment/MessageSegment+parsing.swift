@@ -20,7 +20,7 @@ extension MessageSegment {
             self = .command(command)
             
         default:
-            self = .unknown(left: String(left), right: right.map { String($0) })
+            self = .unknown(left: String(left), right: right.map(String.init))
         }
     }
 }

@@ -1,4 +1,5 @@
-public struct ID<Model>: Newtype, Equatable, Codable {
+// TODO: constrain `Model` in some way?
+public struct ID<Model>: Newtype, Equatable, Hashable, Codable {
     public let rawValue: String
     
     public init(rawValue: String) {

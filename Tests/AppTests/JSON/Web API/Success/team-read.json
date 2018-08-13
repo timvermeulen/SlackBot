@@ -1,0 +1,19 @@
+{
+    "ok": true,
+    "team": {
+        "id": "T7U600AL9",
+        "name": "Bot test",
+        "domain": "tim-bot-testing",
+        "email_domain": "",
+        "icon": {
+            "image_34": "https:\/\/a.slack-edge.com\/66f9\/img\/avatars-teams\/ava_0024-34.png",
+            "image_44": "https:\/\/a.slack-edge.com\/66f9\/img\/avatars-teams\/ava_0024-44.png",
+            "image_68": "https:\/\/a.slack-edge.com\/66f9\/img\/avatars-teams\/ava_0024-68.png",
+            "image_88": "https:\/\/a.slack-edge.com\/b3b7\/img\/avatars-teams\/ava_0024-88.png",
+            "image_102": "https:\/\/a.slack-edge.com\/b3b7\/img\/avatars-teams\/ava_0024-102.png",
+            "image_132": "https:\/\/a.slack-edge.com\/66f9\/img\/avatars-teams\/ava_0024-132.png",
+            "image_230": "https:\/\/a.slack-edge.com\/bfaba\/img\/avatars-teams\/ava_0024-230.png",
+            "image_default": true
+        }
+    }
+}

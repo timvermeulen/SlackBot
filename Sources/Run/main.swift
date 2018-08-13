@@ -4,7 +4,6 @@ import Vapor
 import Foundation
 
 do {
-    let url =           Environment.get("url")!
     let clientID =      Environment.get("client_id")!
     let clientSecret =  Environment.get("client_secret")!
     let signingSecret = Environment.get("signing_secret")!
@@ -13,14 +12,28 @@ do {
         oauth: .init(
             clientID: .init(rawValue: clientID),
             clientSecret: .init(rawValue: clientSecret),
-            scopes: [.channelsHistory, .chatWrite]
+            scopes: [.channelsHistory, .chatWrite, .usersRead, .reactionsWrite]
         ),
-        signingSecret: .init(rawValue: signingSecret),
-        url: .init(rawValue: url)
+        signingSecret: .init(rawValue: signingSecret)
     )
     
     bot.handleMessage { bot, message in
-        try bot.respondEphemerally(to: message, with: ["you just said \"", message.text, "\""])
+        _ = try bot.get(bot.team).do { team in
+            print(team)
+        }
+        
+        try bot.react(to: message, with: Emoji.strawberry)
+
+//        try bot.get(message.user).do { user in
+//            // TODO: log error
+//            try? bot.respondEphemerally(
+//                to: message,
+//                with: ["you just said \"", message.text, "\", ", user.username]
+//            )
+//        }.catch { error in
+//            print(error)
+//        }
+        
 //        try bot.respond(to: message, with: ["wazzup ", message.user], attachments: [
 //            .init(
 //                contents: "Body 1",

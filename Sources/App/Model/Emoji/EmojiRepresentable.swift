@@ -1,3 +1,4 @@
+// TODO: make this a struct with static members instead
 public protocol EmojiRepresentable: MessageSegmentRepresentable {
     var name: String { get }
 }

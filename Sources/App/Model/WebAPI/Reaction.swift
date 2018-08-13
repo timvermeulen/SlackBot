@@ -20,7 +20,3 @@ extension Reaction: Encodable {
         try container.encode(target.timestamp, forKey: .timestamp)
     }
 }
-
-extension Reaction: WebServiceSendable {
-    static let endpoint = "reactions.add"
-}

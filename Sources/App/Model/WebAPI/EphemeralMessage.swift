@@ -23,7 +23,3 @@ extension EphemeralMessage: Encodable {
         try container.encodeIfPresent(attachments, forKey: .attachments)
     }
 }
-
-extension EphemeralMessage: WebServiceSendable {
-    static let endpoint = "chat.postEphemeral"
-}

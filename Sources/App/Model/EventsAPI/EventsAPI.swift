@@ -1,21 +1,22 @@
 import Vapor
 import Crypto
 
-final class EventService {
+final class EventsAPI {
     private let signingSecret: SigningSecret
     private let router: Router
-    private var handlers: [(Client, TeamID, Message) throws -> Void]
+    private var handlers: [(Request, ID<Team>, Message) throws -> Void]
     
     init(signingSecret: SigningSecret, router: Router) {
         self.signingSecret = signingSecret
         self.router = router
         self.handlers = []
     }
-    
+}
+
+extension EventsAPI {
     func start() throws {
         router.post("event") { [signingSecret] request -> Future<AnyResponse> in
             try request.verifySigningSecret(signingSecret)
-            let client = try request.make(Client.self)
             
             return try request.content.decode(Post.self).map { post in
                 switch post {
@@ -23,12 +24,16 @@ final class EventService {
                     return AnyResponse(challenge)
                     
                 case .event(let event, let teams):
-                    if case .messageEvent(.default(let message)) = event {
+                    switch event {
+                    case .messageEvent(.default(let message)):
                         for handler in self.handlers {
                             for team in teams {
-                                try handler(client, team, message)
+                                try handler(request, team, message)
                             }
                         }
+                        
+                    default:
+                        break
                     }
                     
                     return AnyResponse(HTTPStatus.ok)
@@ -37,7 +42,7 @@ final class EventService {
         }
     }
     
-    func handleMessage(_ handler: @escaping (Client, TeamID, Message) throws -> Void) {
+    func handleMessage(_ handler: @escaping (Request, ID<Team>, Message) throws -> Void) {
         handlers.append(handler)
     }
 }

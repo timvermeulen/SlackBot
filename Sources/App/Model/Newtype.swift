@@ -30,7 +30,7 @@ extension Newtype where Self: Equatable, RawValue: Equatable {
 }
 
 extension Newtype where Self: Hashable, RawValue: Hashable {
-    func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         rawValue.hash(into: &hasher)
     }
 }

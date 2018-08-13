@@ -1,0 +1,21 @@
+{
+    "token": "5ooD6SlCzY9mdXIANiB0sv9O",
+    "team_id": "T7U600AL9",
+    "api_app_id": "A826ANFUY",
+    "event": {
+        "type": "message",
+        "user": "U7UJY99UK",
+        "text": "test message",
+        "client_msg_id": "9bf44d4b-e716-4bb0-9c2a-8d3d4e1ca871",
+        "ts": "1534100584.000048",
+        "channel": "C7URA2NA1",
+        "event_ts": "1534100584.000048",
+        "channel_type": "channel"
+    },
+    "type": "event_callback",
+    "authed_teams": [
+        "T7U600AL9"
+    ],
+    "event_id": "EvC6V7611S",
+    "event_time": 1534100584
+}

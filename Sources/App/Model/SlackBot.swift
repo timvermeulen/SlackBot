@@ -4,16 +4,14 @@ public final class SlackBot {
     private let app: Application
     private let router: Router
     private let oauth: OAuth
-    private let url: URL
     
-    private let eventService: EventService
-    private let webService: WebService
+    private let eventsAPI: EventsAPI
     private let slashCommandService: SlashCommandService
     
     // TODO: add persistence for this
-    private var installations: [TeamID: Installation] = [:]
+    private var installations: [ID<Team>: Installation] = [:]
     
-    public init(oauth: OAuth, signingSecret: SigningSecret, url: URL) throws {
+    public init(oauth: OAuth, signingSecret: SigningSecret) throws {
         let router = EngineRouter.default()
         
         var middlewares = MiddlewareConfig()
@@ -30,10 +28,7 @@ public final class SlackBot {
         
         self.router = router
         self.oauth = oauth
-        self.url = url
-        
-        self.eventService = EventService(signingSecret: signingSecret, router: router)
-        self.webService = WebService()
+        self.eventsAPI = EventsAPI(signingSecret: signingSecret, router: router)
         self.slashCommandService = SlashCommandService(router: router)
     }
 }
@@ -45,20 +40,19 @@ public extension SlackBot {
         }
         
         setUpOAuth()
-        try eventService.start()
+        try eventsAPI.start()
         try app.run()
     }
     
-    func handleMessage(_ handler: @escaping (InstalledBot, Message) throws -> Void) {
-        eventService.handleMessage { [webService] client, teamID, message in
+    func handleMessage(_ handler: @escaping (AuthorizedBot, Message) throws -> Void) {
+        eventsAPI.handleMessage { request, teamID, message in
             guard let installation = self.installations[teamID],
-                  installation.appID != message.user
+                  installation.app != message.user
             else { return }
             
-            let installedBot = InstalledBot(
-                webService: webService,
+            let installedBot = try AuthorizedBot(
                 installation: installation,
-                client: client
+                request: request
             )
             
             try handler(installedBot, message)
@@ -77,41 +71,43 @@ public extension SlackBot {
 
 private extension SlackBot {
     func setUpOAuth() {
-        let redirectURI = "\(url)/oauth"
         let state = UUID().uuidString
         
         router.get("oauth") { [oauth] request -> Future<HTTPResponseStatus> in
-            struct Response: Decodable {
-                let code: String
-                let state: String
-            }
+            let code = try request.query.get(String.self, at: "code")
+            let responseState = try request.query.get(String.self, at: "state")
             
-            let response = try request.query.decode(Response.self)
-            guard response.state == state else { throw Abort(.badRequest) }
+            guard responseState == state else { throw Abort(.badRequest) }
             
             return try request.make(Client.self).get("""
                 https://slack.com/api/oauth.access?\
-                code=\(response.code)&\
-                redirect_uri=\(redirectURI)
+                code=\(code)&\
+                redirect_uri=http://\(try request.requireHost())/oauth
                 """,
                 headers: oauth.headers
             )
                 .flatMap { try $0.content.decode(Installation.self) }
-                .do { self.installations[$0.teamID] = $0 }
-                .catch { print("error: \($0)") } // TODO: log this error properly
+                .do { self.installations[$0.team] = $0 }
                 .map { _ in .ok }
         }
         
-        router.get("install") { [oauth] request in
-            request.redirect(to:
+        router.get("install") { [oauth] request -> Response in
+            return request.redirect(to:
                 """
                 https://slack.com/oauth/authorize?\
                 client_id=\(oauth.clientID)&\
                 scope=\(oauth.scope)&\
-                redirect_uri=\(redirectURI)&\
+                redirect_uri=http://\(try request.requireHost())/oauth&\
                 state=\(state)
                 """
             )
         }
+    }
+}
+
+private extension Request {
+    func requireHost() throws -> String {
+        guard let host = http.headers.firstValue(name: .host) else { throw Abort(.badRequest) }
+        return host
     }
 }

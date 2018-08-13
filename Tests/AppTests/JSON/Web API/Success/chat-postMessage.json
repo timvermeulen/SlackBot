@@ -1,0 +1,26 @@
+{
+    "ok": true,
+    "channel": "C7URA2NA1",
+    "ts": "1534109700.000088",
+    "message": {
+        "type": "message",
+        "user": "U83TWLBD5",
+        "text": "example message",
+        "bot_id": "B82SYBCCC",
+        "attachments": [
+            {
+                "author_name": "example author",
+                "text": "example body",
+                "pretext": "example pretext",
+                "title": "example title",
+                "id": 1,
+                "title_link": "example link",
+                "author_link": "example link",
+                "fallback": "example body"
+            }
+        ],
+        "thread_ts": "1534109700.000048",
+        "parent_user_id": "U7UJY99UK",
+        "ts": "1534109700.000088"
+    }
+}

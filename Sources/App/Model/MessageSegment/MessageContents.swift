@@ -45,7 +45,7 @@ extension MessageContents: Codable {
                 }
                 
                 let segment = try MessageSegment(parsing: left, right)
-                    ?? .unknown(left: String(left), right: right.map { String($0) })
+                    ?? .unknown(left: String(left), right: right.map(String.init))
                 
                 segments.append(segment)
                 remainder = remainder[closingIndex...].dropFirst()

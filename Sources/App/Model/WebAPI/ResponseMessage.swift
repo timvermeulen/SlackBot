@@ -32,7 +32,3 @@ extension ResponseMessage: Encodable {
         }
     }
 }
-
-extension ResponseMessage: WebServiceSendable {
-    static let endpoint = "chat.postMessage"
-}
