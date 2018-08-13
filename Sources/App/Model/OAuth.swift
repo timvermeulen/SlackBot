@@ -30,37 +30,11 @@ extension OAuth {
     }
     
     // see https://api.slack.com/scopes
-    public enum Scope: String {
+    public enum Scope: String, Decodable {
         case channelsHistory = "channels:history"
         case chatWrite = "chat:write"
-        case commands
-        case conversationsHistory = "conversations:history"
-        case conversationsRead = "conversations:read"
-        case conversationsWrite = "conversations:write"
-        case dndRead = "dnd:read"
-        case dndWriteUser = "dnd:write:user"
-        case emojiRead = "emoji:read"
-        case filesRead = "files:read"
-        case filesWrite = "files:write"
-        case identityAvatarReadUser = "identity.avatar:read:user"
-        case dentityEmailReadUser = "identity.email:read:user"
-        case identityTeamReadUser = "identity.team:read:user"
-        case identityReadUser = "identity:read:user"
-        case linksRead = "links:read"
-        case linksWrite = "links:write"
-        case pinsRead = "pins:read"
-        case pinsWrite = "pins:write"
-        case reactionsRead = "reactions:read"
         case reactionsWrite = "reactions:write"
-        case remindersReadUser = "reminders:read:user"
-        case remindersWriteUser = "reminders:write:user"
-        case teamRead = "team:read"
-        case usergroupsRead = "usergroups:read"
-        case usergroupsWrite = "usergroups:write"
-        case usersProfileRead = "users.profile:read"
-        case usersProfileWriteUser = "users.profile:write:user"
         case usersRead = "users:read"
-        case usersReadEmail = "users:read.email"
     }
     
     struct AccessToken: Newtype, Decodable, CustomStringConvertible {
