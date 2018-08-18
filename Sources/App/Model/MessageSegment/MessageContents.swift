@@ -36,7 +36,7 @@ extension MessageContents: Codable {
                 
                 let bothParts = remainder[..<closingIndex].dropFirst()
                 
-                if let pipeIndex = bothParts.firstIndex(of: "|") {
+                if let pipeIndex = bothParts.index(of: "|") {
                     left = bothParts[..<pipeIndex]
                     right = bothParts[pipeIndex...].dropFirst()
                 } else {
