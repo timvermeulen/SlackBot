@@ -104,7 +104,7 @@ private extension SlackBot {
             let response = try request.make(Client.self).get("""
                 https://slack.com/api/oauth.access?\
                 code=\(code)&\
-                redirect_uri=http://\(try request.requireHost())/oauth
+                redirect_uri=https://\(try request.requireHost())/oauth
                 """,
                 headers: oauth.headers
             )
@@ -121,7 +121,7 @@ private extension SlackBot {
                 https://slack.com/oauth/authorize?\
                 client_id=\(oauth.clientID)&\
                 scope=\(oauth.scope)&\
-                redirect_uri=http://\(try request.requireHost())/oauth&\
+                redirect_uri=https://\(try request.requireHost())/oauth&\
                 state=\(state)
                 """
             )
