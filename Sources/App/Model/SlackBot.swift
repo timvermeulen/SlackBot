@@ -1,4 +1,5 @@
 import Vapor
+import FluentSQLite
 
 public final class SlackBot {
     private let app: Application
@@ -8,18 +9,24 @@ public final class SlackBot {
     private let eventsAPI: EventsAPI
     private let slashCommandService: SlashCommandService
     
-    // TODO: add persistence for this
-    private var installations: [ID<Team>: Installation] = [:]
-    
     public init(oauth: OAuth, signingSecret: SigningSecret) throws {
+        var services = Services.default()
+        try services.register(FluentSQLiteProvider())
+        
         let router = EngineRouter.default()
+        services.register(router, as: Router.self)
         
         var middlewares = MiddlewareConfig()
         middlewares.use(ErrorMiddleware.self)
-        
-        var services = Services.default()
-        services.register(router, as: Router.self)
         services.register(middlewares)
+        
+        var databases = DatabasesConfig()
+        databases.add(database: try SQLiteDatabase(storage: .file(path: "db.sqlite")), as: .sqlite)
+        services.register(databases)
+        
+        var migrations = MigrationConfig()
+        migrations.add(model: SQLiteModelWrapper<Installation>.self, database: .sqlite)
+        services.register(migrations)
         
         app = try Application(
             environment: .detect(),
@@ -44,18 +51,20 @@ public extension SlackBot {
         try app.run()
     }
     
-    func handleMessage(_ handler: @escaping (AuthorizedBot, Message) throws -> Void) {
-        eventsAPI.handleMessage { request, teamID, message in
-            guard let installation = self.installations[teamID],
-                  installation.app != message.user
-            else { return }
-            
-            let installedBot = try AuthorizedBot(
-                installation: installation,
-                request: request
-            )
-            
-            try handler(installedBot, message)
+    func handleMessage(_ handler: @escaping (AuthorizedBot, Message) -> Void) {
+        eventsAPI.handleMessage { request, client, team, message in
+            _ = self.installation(of: team, request: request).do { installation in
+                guard let installation = installation,
+                      installation.app != message.user
+                else { return }
+                
+                let authorized = AuthorizedBot(
+                    installation: installation,
+                    client: client
+                )
+                
+                handler(authorized, message)
+            }
         }
     }
     
@@ -70,6 +79,19 @@ public extension SlackBot {
 }
 
 private extension SlackBot {
+    func saveInstallation(_ installation: Installation, request: Request) {
+        // TODO: log error properly
+        SQLiteModelWrapper(installation).save(on: request).catch { error in
+            print(error)
+        }
+    }
+    
+    func installation(of team: ID<Team>, request: Request) -> Future<Installation?> {
+        return SQLiteModelWrapper<Installation>.query(on: request)
+            .filter(\Installation.team == team).first()
+            .map { $0?.model }
+    }
+    
     func setUpOAuth() {
         let state = UUID().uuidString
         
@@ -79,16 +101,18 @@ private extension SlackBot {
             
             guard responseState == state else { throw Abort(.badRequest) }
             
-            return try request.make(Client.self).get("""
+            let response = try request.make(Client.self).get("""
                 https://slack.com/api/oauth.access?\
                 code=\(code)&\
                 redirect_uri=http://\(try request.requireHost())/oauth
                 """,
                 headers: oauth.headers
             )
+
+            return response
                 .flatMap { try $0.content.decode(Installation.self) }
-                .do { self.installations[$0.team] = $0 }
-                .map { _ in .ok }
+                .do { self.saveInstallation($0, request: request) }
+                .transform(to: .ok)
         }
         
         router.get("install") { [oauth] request -> Response in

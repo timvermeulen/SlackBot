@@ -1,3 +1,5 @@
+import Newtype
+
 public struct Timestamp {
     public let unix: UnixTimestamp
     public let identifier: Identifier

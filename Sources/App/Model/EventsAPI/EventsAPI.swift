@@ -4,7 +4,7 @@ import Crypto
 final class EventsAPI {
     private let signingSecret: SigningSecret
     private let router: Router
-    private var handlers: [(Request, ID<Team>, Message) throws -> Void]
+    private var handlers: [(Request, Client, ID<Team>, Message) throws -> Void]
     
     init(signingSecret: SigningSecret, router: Router) {
         self.signingSecret = signingSecret
@@ -26,9 +26,11 @@ extension EventsAPI {
                 case .event(let event, let teams):
                     switch event {
                     case .messageEvent(.default(let message)):
+                        let client = try request.make(Client.self)
+                        
                         for handler in self.handlers {
                             for team in teams {
-                                try handler(request, team, message)
+                                try handler(request, client, team, message)
                             }
                         }
                         
@@ -42,7 +44,7 @@ extension EventsAPI {
         }
     }
     
-    func handleMessage(_ handler: @escaping (Request, ID<Team>, Message) throws -> Void) {
+    func handleMessage(_ handler: @escaping (Request, Client, ID<Team>, Message) throws -> Void) {
         handlers.append(handler)
     }
 }

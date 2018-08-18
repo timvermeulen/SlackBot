@@ -1,4 +1,5 @@
 import Vapor
+import Newtype
 
 public struct OAuth {
     let clientID: ClientID
@@ -37,7 +38,7 @@ extension OAuth {
         case usersRead = "users:read"
     }
     
-    struct AccessToken: Newtype, Decodable, CustomStringConvertible {
+    struct AccessToken: Newtype, Codable, CustomStringConvertible {
         let rawValue: String
     }
     

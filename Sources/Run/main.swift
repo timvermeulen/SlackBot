@@ -18,13 +18,13 @@ do {
     )
     
     bot.handleMessage { bot, message in
-        try bot.getTeam().do { team in
+        bot.getTeam().do { team in
             print(team)
         }.catch { error in
             print(error)
         }
         
-        try bot.react(to: message, with: Emoji.strawberry).catch { error in
+        bot.react(to: message, with: Emoji.strawberry).catch { error in
             print(error)
         }
 

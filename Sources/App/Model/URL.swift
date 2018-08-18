@@ -1,3 +1,5 @@
+import Newtype
+
 public struct URL: Newtype, Codable, CustomStringConvertible, ExpressibleByStringLiteral {
     public let rawValue: String
     

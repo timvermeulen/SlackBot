@@ -1,5 +1,6 @@
 import Vapor
 import Crypto
+import Newtype
 
 public struct SigningSecret: Newtype, ExpressibleByStringLiteral {
     public let rawValue: String

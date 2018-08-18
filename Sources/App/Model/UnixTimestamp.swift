@@ -1,4 +1,5 @@
 import Foundation
+import Newtype
 
 public struct UnixTimestamp: Newtype, Codable, Equatable, Comparable, CustomStringConvertible {
     public let rawValue: Int

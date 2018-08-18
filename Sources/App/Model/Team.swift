@@ -1,3 +1,5 @@
+import Newtype
+
 public struct Team: Decodable {
     public let id: ID<Team>
     public let name: Name

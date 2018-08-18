@@ -38,12 +38,30 @@
         }
       },
       {
+        "package": "Fluent",
+        "repositoryURL": "https://github.com/vapor/fluent.git",
+        "state": {
+          "branch": null,
+          "revision": "270b6fa372f03809b9795e8f8b9d1c31267a0ff3",
+          "version": "3.0.0"
+        }
+      },
+      {
+        "package": "FluentSQLite",
+        "repositoryURL": "https://github.com/vapor/fluent-sqlite.git",
+        "state": {
+          "branch": null,
+          "revision": "c32f5bda84bf4ea691d19afe183d40044f579e11",
+          "version": "3.0.0"
+        }
+      },
+      {
         "package": "HTTP",
         "repositoryURL": "https://github.com/vapor/http.git",
         "state": {
           "branch": null,
-          "revision": "8123ea00e9858b369cd168d0303d33e7d3804d19",
-          "version": "3.0.7"
+          "revision": "a192ee144ab53370b2c095c003f429746df85595",
+          "version": "3.1.0"
         }
       },
       {
@@ -53,6 +71,15 @@
           "branch": null,
           "revision": "e57007c23a52b68e44ebdfc70cbe882a7c4f1ec3",
           "version": "3.0.2"
+        }
+      },
+      {
+        "package": "Newtype",
+        "repositoryURL": "https://github.com/timvermeulen/Newtype.git",
+        "state": {
+          "branch": "master",
+          "revision": "398da5cbc97efd660f3a1b3af5a3b4c302eb7a83",
+          "version": null
         }
       },
       {
@@ -74,12 +101,30 @@
         }
       },
       {
+        "package": "SQL",
+        "repositoryURL": "https://github.com/vapor/sql.git",
+        "state": {
+          "branch": null,
+          "revision": "bfbaa048f9e655218611b65da470efa7deb16616",
+          "version": "2.0.2"
+        }
+      },
+      {
+        "package": "SQLite",
+        "repositoryURL": "https://github.com/vapor/sqlite.git",
+        "state": {
+          "branch": null,
+          "revision": "635ad49b2d6395b63462abffcce58ee38be1e4cc",
+          "version": "3.0.0"
+        }
+      },
+      {
         "package": "swift-nio",
         "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {
           "branch": null,
-          "revision": "c6acf77fc9a310c0ebf8d5f73f285d1639801d2f",
-          "version": "1.9.0"
+          "revision": "cf08e673dc41dc63d34065234c8fc432e8d334c4",
+          "version": "1.9.2"
         }
       },
       {
