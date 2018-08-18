@@ -27,7 +27,7 @@ extension MessageContents: Codable {
         
         while let first = remainder.first {
             if first == "<" {
-                guard let closingIndex = remainder.firstIndex(of: ">") else {
+                guard let closingIndex = remainder.index(of: ">") else {
                     throw MessageSegment.ParseError.missingClosingBracket(remainder)
                 }
                 
@@ -50,7 +50,7 @@ extension MessageContents: Codable {
                 segments.append(segment)
                 remainder = remainder[closingIndex...].dropFirst()
             } else {
-                let index = remainder.firstIndex(of: "<") ?? remainder.endIndex
+                let index = remainder.index(of: "<") ?? remainder.endIndex
                 
                 // see https://api.slack.com/docs/message-formatting
                 let raw = remainder[..<index]
