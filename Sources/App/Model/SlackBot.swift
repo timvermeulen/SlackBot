@@ -12,11 +12,13 @@ public final class SlackBot {
     public init(oauth: OAuth, signingSecret: SigningSecret) throws {
         var services = Services.default()
         try services.register(FluentSQLiteProvider())
+        services.register(LogMiddleware.self)
         
         let router = EngineRouter.default()
         services.register(router, as: Router.self)
         
         var middlewares = MiddlewareConfig()
+        middlewares.use(LogMiddleware.self)
         middlewares.use(ErrorMiddleware.self)
         services.register(middlewares)
         
@@ -53,6 +55,7 @@ public extension SlackBot {
     
     func handleMessage(_ handler: @escaping (AuthorizedBot, Message) -> Void) {
         eventsAPI.handleMessage { request, client, team, message in
+            // TODO: log error
             _ = self.installation(of: team, request: request).do { installation in
                 guard let installation = installation,
                       installation.app != message.user
